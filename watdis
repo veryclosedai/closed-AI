@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClosedAI</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+        .logo {
+            max-width: 3000px;
+            width: 100%;
+            height: auto;
+        }
+        .letter {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="logo-container"></div>
+    <script>
+        fetch('logo.svg')
+            .then(response => response.text())
+            .then(svgContent => {
+                document.getElementById('logo-container').innerHTML = svgContent;
+                
+                // Animate the letters
+                anime({
+                    targets: ['.letter:first-child', '#aStroke'],
+                    opacity: [0, 1],
+                    duration: 1500,
+                    easing: 'easeOutExpo',
+                    strokeDashoffset: function(target) {
+                        // Apply strokeDashoffset only to #aStroke
+                        return target.matches('#aLetter') ? [anime.setDashoffset, 0] : null;
+                    }
+                });
+
+                anime({
+                    targets: '.letter:not(:first-child)',
+                    opacity: [0, 1],
+                    duration: 1500,
+                    delay: function(el, i) {
+                        // C and A animate first
+                        if (el.textContent === 'C' || el.textContent === 'A') {
+                            return 0;
+                        }
+                        // Other letters animate after with stagger
+                        return 1000 + (i * 100);
+                    },
+                    easing: 'easeOutExpo'
+                });
+
+                // Animate the 'A' stroke
+                anime({
+                    targets: '#aStroke',
+                    strokeDashoffset: [anime.setDashoffset, 0],
+                    opacity: [0, 1],
+                    duration: 2000,
+                    delay: 1000,
+                    easing: 'easeInOutSine'
+                });
+
+                // Special animation for the colored 'A'
+                anime({
+                    targets: '#aLetter',
+                    opacity: [0, 1],
+                    duration: 1000,
+                    delay: 1800,
+                    easing: 'easeOutExpo'
+                });
+            });
+    </script>
+</body>
+</html>

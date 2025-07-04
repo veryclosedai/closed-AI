@@ -1,0 +1,11 @@
+<svg width="794" height="192" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" overflow="hidden">
+    <defs>
+        <clipPath id="clip0">
+            <rect x="0" y="0" width="794" height="192"/>
+        </clipPath>
+    </defs>
+        <g clip-path="url(#clip0)">
+            <rect x="0" y="0" width="794" height="191.919"/>
+            <text fill="#FFFFFF" font-family="Helvetica,Helvetica_MSFontService,sans-serif" font-weight="400" font-size="184" transform="matrix(1 0 0 0.99958 33.8024 163)">Closed</text>
+            <text fill="#6EC6CB" font-family="Helvetica,Helvetica_MSFontService,sans-serif" font-weight="400" font-size="184" transform="matrix(1 0 0 0.99958 606.71 163)">A</text>
+            <path d="M704.163 30.987 753 162.798 732.887 162.932 686 31.0536 704.163 30.987Z" fill="#6EC6CB" fill-rule="evenodd"/></g></svg>

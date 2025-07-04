@@ -1,0 +1,13 @@
+web-chat-ui
+├── src
+│   ├── js
+│   │   └── main.js
+│   ├── css
+│   │   └── style.css
+│   └── html
+│       └── index.html
+├── assets
+│   └── icons
+├── package.json
+├── .gitignore
+└── README.md

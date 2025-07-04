@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --sidebar-bg: #1e293b;
+            --chat-bg: #0f172a;
+            --user-msg: #1e40af;
+            --bot-msg: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent: #6366f1;
+            --success: #22c55e;
+            --error: #ef4444;
+            --input-bg: #1e293b;
+            --border-color: #334155;
+            --icon-hover: #475569;
+            --sidebar-width: 280px;
+        }
+
+        .light-theme {
+            --sidebar-bg: #ffffff;
+            --chat-bg: #f8fafc;
+            --user-msg: #3b82f6;
+            --bot-msg: #e2e8f0;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --accent: #4f46e5;
+            --error: #dc2626;
+            --input-bg: #ffffff;
+            --border-color: #cbd5e1;
+            --icon-hover: #f1f5f9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--chat-bg);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            transition: background-color 0.3s ease;
+        }
+
+        #app {
+            display: flex;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            z-index: 10;
+        }
+
+        .logo-area {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .app-name {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent), #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .new-chat-btn {
+            margin: 20px;
+            padding: 12px 16px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .new-chat-btn:hover {
+            background-color: #4f46e5;
+        }
+
+        .search-container {
+            padding: 0 20px 16px;
+        }
+
+        .search-box {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .search-box input:focus {
+            outline: none;
+        }
+
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 12px;
+        }
+
+        .chat-item {
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background-color 0.2s;
+        }
+
+        .chat-item:hover {
+            background-color: var(--icon-hover);
+        }
+
+        .chat-item.active {
+            background-color: var(--icon-hover);
+            font-weight: 500;
+        }
+
+        .chat-item i {
+            font-size: 16px;
+            opacity: 0.7;
+        }
+
+        .chat-item-content {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .settings-area {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .upgrade-card {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .upgrade-card h3 {
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .upgrade-card p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 12px;
+        }
+
+        .upgrade-btn {
+            background-color: white;
+            color: var(--accent);
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--icon-hover);
+        }
+
+        .theme-toggle i {
+            font-size: 20px;
+        }
+
+        /* Main Chat Area */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+        }
+
+        .chat-header {
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chat-title {
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .tools {
+            display: flex;
+            gap: 16px;
+        }
+
+        .tool-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 18px;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tool-btn:hover {
+            background-color: var(--icon-hover);
+            color: var(--text-primary);
+        }
+
+        .messages-container {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .message {
+            display: flex;
+            gap: 16px;
+            max-width: 85%;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-message {
+            align-self: flex-end;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .user-avatar {
+            background: linear-gradient(135deg, var(--user-msg), #3b82f6);
+        }
+
+        .bot-avatar {
+            background: linear-gradient(135deg, #8b5cf6, var(--accent));
+        }
+
+        .message-content {
+            padding: 16px;
+            border-radius: 12px;
+            line-height: 1.5;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-message .message-content {
+            background-color: var(--user-msg);
+            border-top-right-radius: 4px;
+            color: white;
+        }
+
+        .bot-message .message-content {
+            background-color: var(--bot-msg);
+            border-top-left-radius: 4px;
+        }
+
+        .message-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .action-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background-color: var(--bot-msg);
+            border-radius: 12px;
+            width: fit-content;
+            margin-top: 8px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--text-secondary);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        .input-area {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        .message-input {
+            width: 100%;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px 60px 16px 20px;
+            color: var(--text-primary);
+            resize: none;
+            height: 56px;
+            max-height: 200px;
+            font-size: 16px;
+            transition: height 0.2s;
+        }
+
+        .message-input:focus {
+            outline: 2px solid var(--accent);
+            outline-offset: -1px;
+        }
+
+        .input-actions {
+            position: absolute;
+            right: 16px;
+            bottom: 16px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .input-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 18px;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-btn:hover {
+            background-color: var(--icon-hover);
+            color: var(--text-primary);
+        }
+
+        .send-btn {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .send-btn:hover {
+            background-color: #4f46e5;
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 14px;
+            margin-top: 8px;
+            text-align: center;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Mobile sidebar toggle */
+        .sidebar-toggle {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 5;
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: absolute;
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .sidebar-toggle {
+                display: flex;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+        
+        /* API Config Panel */
+        .api-config {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            width: 320px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+        
+        .api-config.hidden {
+            transform: translateY(120%);
+        }
+        
+        .api-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .api-title {
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .api-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 20px;
+        }
+        
+        .api-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .api-form label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .api-form input, .api-form select {
+            width: 100%;
+            padding: 10px 12px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+        }
+        
+        .api-form button {
+            margin-top: 8px;
+            padding: 10px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+        
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--success);
+        }
+        
+        .status-indicator.disconnected {
+            background-color: var(--error);
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="sidebar-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+        
+        <div class="sidebar">
+            <div class="logo-area">
+                <div class="logo">AI</div>
+                <div class="app-name">ChatMind</div>
+            </div>
+            
+            <button class="new-chat-btn" id="newChatBtn">
+                <i class="fas fa-plus"></i> New Chat
+            </button>
+            
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search chats...">
+                </div>
+            </div>
+            
+            <div class="chat-history" id="chatHistory">
+                <div class="chat-item active" data-id="react-hooks">
+                    <i class="fas fa-comment"></i>
+                    <div class="chat-item-content">Understanding React Hooks</div>
+                </div>
+                <div class="chat-item" data-id="js-patterns">
+                    <i class="fas fa-comment"></i>
+                    <div class="chat-item-content">JavaScript Design Patterns</div>
+                </div>
+                <div class="chat-item" data-id="css-grid">
+                    <i class="fas fa-comment"></i>
+                    <div class="chat-item-content">CSS Grid vs Flexbox</div>
+                </div>
+            </div>
+            
+            <div class="settings-area">
+                <div class="upgrade-card">
+                    <h3>Upgrade to Pro</h3>
+                    <p>Get access to advanced features and priority support</p>
+                    <button class="upgrade-btn">Upgrade Now</button>
+                </div>
+                
+                <div class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                    <div>Dark Mode</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="chat-title" id="chatTitle">Understanding React Hooks</div>
+                <div class="tools">
+                    <button class="tool-btn" id="apiConfigBtn" title="API Configuration">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <button class="tool-btn" title="Clear Chat">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="messages-container" id="messagesContainer">
+                <div class="message bot-message">
+                    <div class="avatar bot-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div>
+                        <div class="message-content">
+                            Hello! I'm your AI assistant. How can I help you with React Hooks today?
+                        </div>
+                        <div class="message-actions">
+                            <button class="action-btn">
+                                <i class="far fa-thumbs-up"></i>
+                            </button>
+                            <button class="action-btn">
+                                <i class="far fa-thumbs-down"></i>
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message user-message">
+                    <div class="avatar user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <div class="message-content">
+                            Can you explain the difference between useState and useEffect?
+                        </div>
+                        <div class="message-actions">
+                            <span>12:45 PM</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message bot-message">
+                    <div class="avatar bot-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div>
+                        <div class="message-content">
+                            Of course! Here's a comparison of `useState` and `useEffect`:<br><br>
+                            <strong>useState</strong>:<br>
+                            - Manages component state<br>
+                            - Returns a stateful value and a function to update it<br>
+                            - Triggers re-renders when state changes<br><br>
+                            
+                            <strong>useEffect</strong>:<br>
+                            - Performs side effects in function components<br>
+                            - Replaces lifecycle methods like componentDidMount, componentDidUpdate<br>
+                            - Runs after every render by default<br><br>
+                            
+                            Let me know if you'd like code examples!
+                        </div>
+                        <div class="message-actions">
+                            <button class="action-btn">
+                                <i class="far fa-thumbs-up"></i> 3
+                            </button>
+                            <button class="action-btn">
+                                <i class="far fa-thumbs-down"></i>
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="input-area">
+                <div class="input-container">
+                    <textarea 
+                        class="message-input" 
+                        id="messageInput"
+                        placeholder="Type a message..." 
+                        rows="1"
+                    ></textarea>
+                    <div class="input-actions">
+                        <button class="input-btn" title="Attach file">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <button class="input-btn" title="Voice input">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button class="input-btn send-btn" id="sendButton" title="Send message">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="error-message" id="errorMessage"></div>
+            </div>
+        </div>
+        
+        <!-- API Configuration Panel -->
+        <div class="api-config hidden" id="apiConfig">
+            <div class="api-header">
+                <div class="api-title">AI Backend Configuration</div>
+                <button class="api-toggle" id="closeApiConfig">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="api-form">
+                <label for="apiEndpoint">API Endpoint</label>
+                <input type="text" id="apiEndpoint" value="https://api.openai.com/v1/chat/completions">
+                
+                <label for="apiKey">API Key</label>
+                <input type="password" id="apiKey" placeholder="Enter your API key">
+                
+                <label for="apiModel">Model</label>
+                <select id="apiModel">
+                    <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+                    <option value="gpt-4">gpt-4</option>
+                    <option value="llama-2">Llama 2</option>
+                    <option value="claude">Claude</option>
+                </select>
+                
+                <button id="saveApiConfig">Save Configuration</button>
+            </div>
+            <div class="api-status">
+                <div class="status-indicator" id="apiStatus"></div>
+                <span id="apiStatusText">Connected to mock backend</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarToggle = document.querySelector('.sidebar-toggle');
+        const themeToggle = document.querySelector('#themeToggle');
+        const messageInput = document.querySelector('#messageInput');
+        const sendButton = document.querySelector('#sendButton');
+        const chatItems = document.querySelectorAll('.chat-item');
+        const messagesContainer = document.querySelector('#messagesContainer');
+        const errorMessage = document.querySelector('#errorMessage');
+        const apiConfigBtn = document.querySelector('#apiConfigBtn');
+        const apiConfig = document.querySelector('#apiConfig');
+        const closeApiConfig = document.querySelector('#closeApiConfig');
+        const saveApiConfig = document.querySelector('#saveApiConfig');
+        const apiStatus = document.querySelector('#apiStatus');
+        const apiStatusText = document.querySelector('#apiStatusText');
+        const newChatBtn = document.querySelector('#newChatBtn');
+        const chatTitle = document.querySelector('#chatTitle');
+
+        // State
+        let currentChatId = 'react-hooks';
+        let apiConfigData = {
+            endpoint: 'https://api.openai.com/v1/chat/completions',
+            key: '',
+            model: 'gpt-3.5-turbo',
+            useMock: true
+        };
+
+        // Toggle sidebar on mobile
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+        
+        // Theme toggle functionality
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            const icon = themeToggle.querySelector('i');
+            if (document.body.classList.contains('light-theme')) {
+                icon.className = 'fas fa-sun';
+                themeToggle.querySelector('div').textContent = 'Light Mode';
+            } else {
+                icon.className = 'fas fa-moon';
+                themeToggle.querySelector('div').textContent = 'Dark Mode';
+            }
+        });
+        
+        // Auto-resize textarea
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+        
+        // Send message functionality
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (message) {
+                errorMessage.textContent = '';
+                
+                // Create user message element
+                const userMessageElement = createUserMessageElement(message);
+                messagesContainer.appendChild(userMessageElement);
+                messageInput.value = '';
+                messageInput.style.height = '56px';
+                
+                // Scroll to bottom
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                
+                // Show typing indicator
+                const typingIndicator = createTypingIndicator();
+                messagesContainer.appendChild(typingIndicator);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                
+                try {
+                    // Get AI response
+                    const aiResponse = await getAIResponse(message);
+                    
+                    // Remove typing indicator
+                    typingIndicator.remove();
+                    
+                    // Create bot message element
+                    const botMessageElement = createBotMessageElement(aiResponse);
+                    messagesContainer.appendChild(botMessageElement);
+                    
+                    // Scroll to bottom
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                } catch (error) {
+                    typingIndicator.remove();
+                    errorMessage.textContent = error.message;
+                    console.error('Error:', error);
+                }
+            }
+        }
+        
+        // Get AI response from backend
+        async function getAIResponse(message) {
+            if (apiConfigData.useMock) {
+                // Simulate API delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Mock responses based on message content
+                if (message.toLowerCase().includes('hello') || message.toLowerCase().includes('hi')) {
+                    return "Hello! How can I assist you today?";
+                } else if (message.toLowerCase().includes('react') || message.toLowerCase().includes('hook')) {
+                    return "React hooks are functions that let you 'hook into' React state and lifecycle features from function components. The most commonly used hooks are useState, useEffect, and useContext.";
+                } else if (message.toLowerCase().includes('usecontext')) {
+                    return "useContext is a hook that allows you to access the value of a context. This lets you avoid prop drilling and access global state anywhere in your component tree.";
+                } else if (message.toLowerCase().includes('code')) {
+                    return "Here's an example of a React component using hooks:\n\n```jsx\nfunction Counter() {\n  const [count, setCount] = useState(0);\n\n  useEffect(() => {\n    document.title = `Count: ${count}`;\n  }, [count]);\n\n  return (\n    <div>\n      <p>Count: {count}</p>\n      <button onClick={() => setCount(count + 1)}>Increment</button>\n    </div>\n  );\n}\n```";
+                } else {
+                    return "I'm a mock AI assistant. In a real implementation, this response would come from an AI backend service. You can configure a real backend using the API settings.";
+                }
+            } else {
+                // This is how you would connect to a real AI backend
+                try {
+                    const response = await fetch(apiConfigData.endpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${apiConfigData.key}`
+                        },
+                        body: JSON.stringify({
+                            model: apiConfigData.model,
+                            messages: [
+                                { role: 'user', content: message }
+                            ],
+                            temperature: 0.7
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`API Error: ${response.status} ${response.statusText}`);
+                    }
+                    
+                    const data = await response.json();
+                    return data.choices[0].message.content;
+                } catch (error) {
+                    throw new Error('Failed to connect to AI service. Please check your API configuration.');
+                }
+            }
+        }
+        
+        // Create message elements
+        function createUserMessageElement(message) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'user-message');
+            messageElement.innerHTML = `
+                <div class="avatar user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <div class="message-content">${message}</div>
+                    <div class="message-actions">
+                        <span>${getCurrentTime()}</span>
+                    </div>
+                </div>
+            `;
+            return messageElement;
+        }
+        
+        function createBotMessageElement(message) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'bot-message');
+            messageElement.innerHTML = `
+                <div class="avatar bot-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div>
+                    <div class="message-content">${message}</div>
+                    <div class="message-actions">
+                        <button class="action-btn">
+                            <i class="far fa-thumbs-up"></i>
+                        </button>
+                        <button class="action-btn">
+                            <i class="far fa-thumbs-down"></i>
+                        </button>
+                        <button class="action-btn">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                </div>
+            `;
+            return messageElement;
+        }
+        
+        function createTypingIndicator() {
+            const typingIndicator = document.createElement('div');
+            typingIndicator.classList.add('typing-indicator');
+            typingIndicator.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            return typingIndicator;
+        }
+        
+        // Get current time in HH:MM format
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        
+        // Chat item selection
+        chatItems.forEach(item => {
+            item.addEventListener('click', () => {
+                chatItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                currentChatId = item.dataset.id;
+                chatTitle.textContent = item.querySelector('.chat-item-content').textContent;
+                
+                // Close sidebar on mobile after selection
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('open');
+                }
+            });
+        });
+        
+        // API Configuration
+        apiConfigBtn.addEventListener('click', () => {
+            apiConfig.classList.remove('hidden');
+        });
+        
+        closeApiConfig.addEventListener('click', () => {
+            apiConfig.classList.add('hidden');
+        });
+        
+        saveApiConfig.addEventListener('click', () => {
+            const endpoint = document.querySelector('#apiEndpoint').value;
+            const key = document.querySelector('#apiKey').value;
+            const model = document.querySelector('#apiModel').value;
+            
+            if (endpoint && key) {
+                apiConfigData = {
+                    endpoint,
+                    key,
+                    model,
+                    useMock: false
+                };
+                
+                apiStatus.classList.remove('disconnected');
+                apiStatusText.textContent = `Connected to ${model}`;
+                apiConfig.classList.add('hidden');
+            } else {
+                apiConfigData.useMock = true;
+                apiStatus.classList.add('disconnected');
+                apiStatusText.textContent = "Using mock backend";
+            }
+        });
+        
+        // New chat button
+        newChatBtn.addEventListener('click', () => {
+            // Reset chat
+            messagesContainer.innerHTML = '';
+            
+            // Create new welcome message
+            const welcomeMessage = createBotMessageElement("Hello! I'm your AI assistant. What would you like to talk about today?");
+            messagesContainer.appendChild(welcomeMessage);
+            
+            // Update title
+            chatTitle.textContent = "New Chat";
+            
+            // Reset active chat
+            chatItems.forEach(item => item.classList.remove('active'));
+        });
+        
+        // Initialize with dark mode
+        document.body.classList.add('light-theme');
+        themeToggle.click();
+    </script>
+</body>
+</html>

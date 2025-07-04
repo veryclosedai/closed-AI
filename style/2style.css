@@ -1,0 +1,219 @@
+:root {
+    --bg-color: #1c1c1c;
+    --text-color: #e0e0e0;
+    --button-bg: #2a2a2a;
+    --button-hover: #383838;
+    --accent-color: #e6957d;
+    --sidebar-width: 260px;
+    --sidebar-bg: #1a1a1a;
+    --border-color: #2d2d2d;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+}
+
+.plan-banner {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.free-plan {
+    color: #888;
+}
+
+.upgrade-link {
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-top {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.menu-btn {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    padding: 8px;
+    cursor: pointer;
+    margin-bottom: 16px;
+}
+
+.new-chat {
+    width: 100%;
+    background: var(--button-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+    padding: 16px;
+    border-top: 1px solid var(--border-color);
+}
+
+.profile-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.greeting {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.star-icon {
+    color: var(--accent-color);
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.greeting h1 {
+    font-size: 36px;
+    font-weight: normal;
+    margin: 10px 0;
+}
+
+.chat-input-container {
+    background: #2a2a2a;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 30px;
+}
+
+textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    font-size: 16px;
+    resize: none;
+    padding: 5px;
+    outline: none;
+}
+
+.input-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.control-btn {
+    background: var(--button-bg);
+    border: none;
+    color: var(--text-color);
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.model-selector {
+    background: var(--button-bg);
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.dropdown-arrow {
+    font-size: 12px;
+    color: #888;
+}
+
+.submit-btn {
+    background: var(--accent-color);
+    color: var(--bg-color);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.left-controls, .right-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    background: var(--button-bg);
+    border: none;
+    color: var(--text-color);
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.action-btn:hover {
+    background: var(--button-hover);
+}
+
+.content {
+    margin-left: var(--sidebar-width);
+}

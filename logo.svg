@@ -1,0 +1,29 @@
+<svg width="794" height="192" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" overflow="hidden">
+    <defs>
+        <clipPath id="clip0">
+            <rect x="0" y="0" width="794" height="192"/>
+        </clipPath>
+    </defs>
+    <g clip-path="url(#clip0)">
+        <rect x="0" y="0" width="794" height="191.919"/>
+        <g id="mainText">
+            <!-- Letter C -->
+            <text class="letter" fill="#FFFFFF" font-family="Helvetica,Helvetica_MSFontService,sans-serif" font-weight="400" font-size="184" transform="matrix(1 0 0 0.99958 33.8024 163)">C</text>
+            <!-- Letter l -->
+            <text class="letter" fill="#FFFFFF" font-family="Helvetica,Helvetica_MSFontService,sans-serif" font-weight="400" font-size="184" transform="matrix(1 0 0 0.99958 166.691 163)">l</text>
+            <!-- Letter o -->
+            <text class="letter" fill="#FFFFFF" font-family="Helvetica,Helvetica_MSFontService,sans-serif" font-weight="400" font-size="184" transform="matrix(1 0 0 0.99958 206.928 165)">o</text>
+            <!-- Letter s -->
+            <text class="letter" fill="#FFFFFF" font-family="Helvetica,Helvetica_MSFontService,sans-serif" font-weight="400" font-size="184" transform="matrix(1 0 0 0.99958 309.889 163)">s</text>
+            <!-- Letter e -->
+            <text class="letter" fill="#FFFFFF" font-family="Helvetica,Helvetica_MSFontService,sans-serif" font-weight="400" font-size="184" transform="matrix(1 0 0 0.99958 401.937 163)">e</text>
+            <!-- Letter d -->
+            <text class="letter" fill="#FFFFFF" font-family="Helvetica,Helvetica_MSFontService,sans-serif" font-weight="400" font-size="184" transform="matrix(1 0 0 0.99958 504.013 163)">d</text>
+        </g>
+        <!-- Letter A -->
+        <g id="aGroup">
+            <text id="aLetter" fill="#6EC6CB" font-family="Helvetica,Helvetica_MSFontService,sans-serif" font-weight="400" font-size="184" transform="matrix(1 0 0 0.99958 606.736 163)">A</text>
+            <path id="aStroke" stroke="#6EC6CB" stroke-width="2" d="M704.163 30.987 753 162.798 732.887 162.932 686 31.0536 704.163 30.987Z" fill="none" fill-rule="evenodd"/>
+        </g>
+    </g>
+</svg>

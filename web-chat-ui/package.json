@@ -1,0 +1,19 @@
+{
+  "name": "web-chat-ui",
+  "version": "1.0.0",
+  "description": "A web chat application that allows users to communicate in real-time.",
+  "main": "src/js/main.js",
+  "scripts": {
+    "start": "live-server src/html/index.html"
+  },
+  "keywords": [
+    "chat",
+    "web",
+    "application"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "live-server": "^1.2.1"
+  }
+}
